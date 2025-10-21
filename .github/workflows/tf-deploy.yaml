@@ -40,7 +40,7 @@ jobs:
       - name: Configure AWS Creds
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::280504581481:role/TerraformDeploy
+          role-to-assume: arn:aws:iam::280504581481:role/github-role
           aws-region: eu-west-2
 
       - name: Terraform init
@@ -116,7 +116,7 @@ jobs:
       - name: Configure AWS Creds
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::280504581481:role/TerraformDeploy
+          role-to-assume: arn:aws:iam::280504581481:role/github-role
           aws-region: eu-west-2
 
       - name: Terraform init
