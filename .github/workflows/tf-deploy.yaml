@@ -36,6 +36,10 @@ jobs:
         with:
           terraform_version: "1.6.1"
           terraform_wrapper: true
+          - name: Print GitHub OIDC claims
+  run: |
+    echo "REPO: $GITHUB_REPOSITORY"
+
 
       - name: Configure AWS Creds
         uses: aws-actions/configure-aws-credentials@v4
@@ -112,6 +116,10 @@ jobs:
         with:
           terraform_version: "1.6.1"
           terraform_wrapper: true
+          - name: Print GitHub OIDC claims
+  run: |
+    echo "REPO: $GITHUB_REPOSITORY"
+
 
       - name: Configure AWS Creds
         uses: aws-actions/configure-aws-credentials@v4
