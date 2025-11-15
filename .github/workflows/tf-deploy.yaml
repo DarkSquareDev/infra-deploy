@@ -28,18 +28,18 @@ jobs:
         with:
           terraform_version: "1.6.1"
           terraform_wrapper: true
-          - name: Debug OIDC Token
-  run: |
-    echo "Repository: $ github.repository "
-    echo "Ref: $ github.ref "
-    echo "Event: $ github.event_name "
+
+      - name: Debug OIDC Token
+        run: |
+          echo "Repository: $ github.repository "
+          echo "Ref: $ github.ref "
+          echo "Event: $ github.event_name "
 
       - name: Configure AWS Creds
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::280504581481:role/TerraformDeploy
           aws-region: us-east-1
-          
 
       - name: Terraform init
         id: init
@@ -67,17 +67,14 @@ jobs:
         with:
           github-token: $ secrets.GITHUB_TOKEN 
           script: |
-            // Check if the Terraform plan was successful
             const planStatus = "$ steps.plan.outcome " === "success"
               ? "Plan succeeded"
               : "Plan failed";
 
-            // Create a message to ask for approval if the plan succeeded
             const approvalMessage = planStatus === "Plan succeeded"
               ? "\n\n### Changes detected! Please review the plan and approve the apply job in GitHub Actions."
               : "";
 
-            // Build the full comment body
             const commentBody = [
               "#### Terraform Format and Style: not checked",
               `#### Terraform Initialization: \`$ steps.init.outcome \``,
@@ -86,13 +83,12 @@ jobs:
               `#### Terraform Plan Status: ${planStatus}`,
               "",
               "Terraform plan was uploaded as an artifact.",
-              `[View it in the Actions tab](https://github.com/$ github.repository /actions/runs/$ github.run_id )`,
+              `[View it in the Actions tab]({{https://github.com/${{}} github.repository }}/actions/runs/$ github.run_id )`,
               approvalMessage,
               "",
               `*Pusher: @$ github.actor , Action: $ github.event_name , Workflow: $ github.workflow *`
             ].join("\n");
 
-            // Post the comment to the pull request
             await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -105,8 +101,6 @@ jobs:
     needs: plan
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-    # The environment 'terraform_prod' is used for protected deployments and may have secrets or approval rules.
-    # environment: terraform_prod
     steps:
       - name: Git Clone the Repo
         uses: actions/checkout@v4
@@ -145,13 +139,9 @@ jobs:
         with:
           github-token: $ secrets.GITHUB_TOKEN 
           script: |
-            // Get the result of the apply step
             const applyOutcome = "$ steps.apply.outcome ";
-
-            // Get the output of the apply command (or show a default message)
             const applyOutput = process.env.APPLY || 'No output available';
 
-            // Build the comment body
             const commentBody = [
               `#### Terraform Apply \`${applyOutcome}\``,
               "<details><summary>Show Apply Output</summary>",
@@ -164,7 +154,6 @@ jobs:
               `*Applied by: @$ github.actor *`
             ].join("\n");
 
-            // Post the comment to the pull request
             await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
