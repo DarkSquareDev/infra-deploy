@@ -83,7 +83,7 @@ jobs:
               `#### Terraform Plan Status: ${planStatus}`,
               "",
               "Terraform plan was uploaded as an artifact.",
-              `[View it in the Actions tab]({{https://github.com/${{}} github.repository }}/actions/runs/$ github.run_id )`,
+              `[View it in the Actions tab](https://github.com/$ github.repository /actions/runs/$ github.run_id )`,
               approvalMessage,
               "",
               `*Pusher: @$ github.actor , Action: $ github.event_name , Workflow: $ github.workflow *`
